@@ -10,20 +10,29 @@ export class ProjectsService {
   constructor(
     @InjectRepository(Projects) private projectsRepo: Repository<Projects>,
   ) {}
-  async create(createProjectDto: CreateProjectDto) {
+  async create(createProjectDto: CreateProjectDto, file: Express.Multer.File) {
     try {
-      const newProject = await this.projectsRepo.save(createProjectDto);
-      if (newProject) {
-        return {
-          success: true,
-          message: 'Add new project successfully',
-        };
-      } else {
+      if (!file) {
         return {
           success: false,
           message: 'Failed to add new project',
         };
       }
+      const imageUrl = file.filename;
+      const newProject = await this.projectsRepo.save({
+        ...createProjectDto,
+        image: imageUrl,
+      });
+      if (!newProject) {
+        return {
+          success: false,
+          message: 'Failed to add new project',
+        };
+      }
+      return {
+        success: true,
+        message: 'Add new project successfully',
+      };
     } catch (error) {
       console.error(error);
       return {
@@ -75,16 +84,21 @@ export class ProjectsService {
     }
   }
 
-  async update(id: number, updateProjectDto: UpdateProjectDto) {
+  async update(
+    id: number,
+    updateProjectDto: UpdateProjectDto,
+    file: Express.Multer.File,
+  ) {
     try {
       const project = await this.projectsRepo.findOneBy({ id: id });
 
-      if (!project) {
+      if (!project || !file) {
         return {
           success: false,
           message: 'Project not found',
         };
       }
+      const imageUrl = file.filename;
       if (updateProjectDto.title !== undefined) {
         project.title = updateProjectDto.title;
       }
@@ -92,7 +106,7 @@ export class ProjectsService {
         project.description = updateProjectDto.description;
       }
       if (updateProjectDto.image !== undefined) {
-        project.image = updateProjectDto.image;
+        project.image = imageUrl;
       }
       if (updateProjectDto.category !== undefined) {
         project.category = updateProjectDto.category;
