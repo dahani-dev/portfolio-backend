@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Tree } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Projects } from './entities/project.entity';
 
 @Injectable()
@@ -54,6 +54,12 @@ export class ProjectsService {
   async findOne(id: number) {
     try {
       const res = await this.projectsRepo.findOneBy({ id: id });
+      if (!res) {
+        return {
+          success: false,
+          message: 'Project not found',
+        };
+      }
       return {
         data: res,
         success: true,
@@ -71,37 +77,69 @@ export class ProjectsService {
 
   async update(id: number, updateProjectDto: UpdateProjectDto) {
     try {
-      const updatedProject = await this.projectsRepo.findOneBy({ id: id });
-      if (updatedProject) {
-        Object.assign(updatedProject, updateProjectDto);
-        // updatedProject.title = updateProjectDto.title;
-        // updatedProject.description = updateProjectDto.description;
-        // updatedProject.image = updateProjectDto.image;
-        // updatedProject.category = updateProjectDto.category;
-        // updatedProject.link = updateProjectDto.link;
-        // updatedProject.github = updateProjectDto.github;
-        await this.projectsRepo.save(updatedProject);
-        return {
-          success: true,
-          message: 'Project updated successfully',
-        };
-      } else {
+      const project = await this.projectsRepo.findOneBy({ id: id });
+
+      if (!project) {
         return {
           success: false,
-          message: 'Failed to updated project',
+          message: 'Project not found',
         };
       }
+      if (updateProjectDto.title !== undefined) {
+        project.title = updateProjectDto.title;
+      }
+      if (updateProjectDto.description !== undefined) {
+        project.description = updateProjectDto.description;
+      }
+      if (updateProjectDto.image !== undefined) {
+        project.image = updateProjectDto.image;
+      }
+      if (updateProjectDto.category !== undefined) {
+        project.category = updateProjectDto.category;
+      }
+      if (updateProjectDto.link !== undefined) {
+        project.link = updateProjectDto.link;
+      }
+      if (updateProjectDto.github !== undefined) {
+        project.github = updateProjectDto.github;
+      }
+
+      await this.projectsRepo.save(project);
+
+      return {
+        success: true,
+        message: 'Project updated successfully',
+      };
     } catch (error) {
       console.error(error);
       return {
-        data: [],
         success: false,
         message: 'Something went wrong',
       };
     }
   }
+  async remove(id: number) {
+    try {
+      const project = await this.projectsRepo.findOneBy({ id: id });
+      if (!project) {
+        return {
+          success: false,
+          message: 'Project not found',
+        };
+      }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+      await this.projectsRepo.delete(project);
+
+      return {
+        success: true,
+        message: 'Project deleted successfully',
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        message: 'Something went wrong',
+      };
+    }
   }
 }
