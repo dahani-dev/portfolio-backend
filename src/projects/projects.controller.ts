@@ -8,6 +8,8 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -20,6 +22,13 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
+
+  /**
+   * Create a new project with image upload
+   * @HttpCode decorator returns 201 Created status for successful resource creation
+   */
+  @HttpCode(HttpStatus.CREATED)
+
   // The Interceptor here is responsible for handling file uploads, i.e. receiving the file attached to the request.
   @UseInterceptors(
     // This is a type of Interceptor that is designed to capture a single file from a request (upload file).
@@ -35,16 +44,19 @@ export class ProjectsController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll() {
     return this.projectsService.findAll();
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
     return this.projectsService.findOne(+id);
   }
 
   @Patch(':id')
+  @HttpCode(HttpStatus.OK)
   update(
     @Param('id') id: string,
     @Body() updateProjectDto: UpdateProjectDto,
@@ -54,6 +66,7 @@ export class ProjectsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   remove(@Param('id') id: string) {
     return this.projectsService.remove(+id);
   }

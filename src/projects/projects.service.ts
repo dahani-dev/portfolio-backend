@@ -1,7 +1,5 @@
 import {
   BadRequestException,
-  HttpCode,
-  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -19,11 +17,6 @@ export class ProjectsService {
     private readonly projectsRepo: Repository<Projects>,
   ) {}
 
-  /**
-   * Create a new project with image upload
-   * @HttpCode decorator returns 201 Created status for successful resource creation
-   */
-  @HttpCode(HttpStatus.CREATED)
   async create(createProjectDto: CreateProjectDto, file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('Image file is required');
@@ -54,7 +47,6 @@ export class ProjectsService {
    * Fetch all projects
    * Returns 200 OK even for empty results (not an error)
    */
-  @HttpCode(HttpStatus.OK)
   async findAll() {
     try {
       const projects = await this.projectsRepo.find({
@@ -79,7 +71,6 @@ export class ProjectsService {
   /**
    * Find a single project by ID
    */
-  @HttpCode(HttpStatus.OK)
   async findOne(id: number) {
     if (!id || id <= 0) {
       throw new BadRequestException('Invalid project ID');
@@ -112,7 +103,6 @@ export class ProjectsService {
    * Update project with optional image upload
    * File parameter is now optional for partial updates
    */
-  @HttpCode(HttpStatus.OK)
   async update(
     id: number,
     updateProjectDto: UpdateProjectDto,
@@ -164,7 +154,6 @@ export class ProjectsService {
    * Delete a project by ID
    * Returns 200 OK for successful deletion
    */
-  @HttpCode(HttpStatus.OK)
   async remove(id: number) {
     if (!id || id <= 0) {
       throw new BadRequestException('Invalid project ID');
