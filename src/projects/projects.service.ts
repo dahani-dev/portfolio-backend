@@ -72,7 +72,7 @@ export class ProjectsService {
    * Find a single project by ID
    */
   async findOne(id: number) {
-    if (!id || id <= 0) {
+    if (id <= 0) {
       throw new BadRequestException('Invalid project ID');
     }
 
@@ -108,7 +108,7 @@ export class ProjectsService {
     updateProjectDto: UpdateProjectDto,
     file?: Express.Multer.File, // Made optional
   ) {
-    if (!id || id <= 0) {
+    if (id <= 0) {
       throw new BadRequestException('Invalid project ID');
     }
 
@@ -155,7 +155,7 @@ export class ProjectsService {
    * Returns 200 OK for successful deletion
    */
   async remove(id: number) {
-    if (!id || id <= 0) {
+    if (id <= 0) {
       throw new BadRequestException('Invalid project ID');
     }
 

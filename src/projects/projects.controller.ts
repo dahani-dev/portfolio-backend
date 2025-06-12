@@ -10,6 +10,7 @@ import {
   UploadedFile,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -51,14 +52,16 @@ export class ProjectsController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
+  // ParseIntPipe is used to automatically convert the 'id' parameter from a string to a number.
+  // If 'id' cannot be converted to a number, it will throw a BadRequestException.
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.projectsService.findOne(+id);
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: string,
     @Body() updateProjectDto: UpdateProjectDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
@@ -67,7 +70,7 @@ export class ProjectsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     return this.projectsService.remove(+id);
   }
 }
