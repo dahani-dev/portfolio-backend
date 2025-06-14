@@ -8,8 +8,12 @@ import {
 
 const CURRENT_TIMESTAMP = 'CURRENT_TIMESTAMP(6)';
 
-@Entity()
-export class Projects {
+// name: 'projects' is mean:
+// It specifies the **table name** in the database that this entity will map to.
+// Without this, the table name would be the same as the class name by default ('Project' → 'project').
+// By using name: 'projects', we explicitly tell TypeORM to use the table name 'projects'.
+@Entity({ name: 'projects' })
+export class Project {
   @PrimaryGeneratedColumn()
   id: number;
 

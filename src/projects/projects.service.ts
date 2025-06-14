@@ -8,13 +8,13 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Projects } from './entities/project.entity';
+import { Project } from './entities/project.entity';
 
 @Injectable()
 export class ProjectsService {
   constructor(
-    @InjectRepository(Projects)
-    private readonly projectsRepo: Repository<Projects>,
+    @InjectRepository(Project)
+    private readonly projectsRepo: Repository<Project>,
   ) {}
 
   async create(createProjectDto: CreateProjectDto, file: Express.Multer.File) {
