@@ -15,10 +15,6 @@ export class CreateProjectDto {
 
   @IsString()
   @IsNotEmpty()
-  image: string;
-
-  @IsString()
-  @IsNotEmpty()
   category: string;
 
   @IsString()

@@ -18,19 +18,19 @@ export class ProjectsService {
   ) {}
 
   async create(createProjectDto: CreateProjectDto, file: Express.Multer.File) {
+    // Image file validation (should be handled here, not in the DTO)
     if (!file) {
       throw new BadRequestException('Image file is required');
     }
 
     try {
       const imageUrl = file.filename;
-      const newProject = await this.projectsRepo.save({
+      await this.projectsRepo.save({
         ...createProjectDto,
         image: imageUrl,
       });
 
       return {
-        data: newProject, // Return created project data
         success: true,
         message: 'Project created successfully',
       };
@@ -119,7 +119,9 @@ export class ProjectsService {
         throw new NotFoundException(`Project with ID ${id} not found`);
       }
 
-      // Prepare update data using merge (cleaner approach)
+      // Prepare the updated data by merging existing entity with new values
+      // The merge() function is from TypeORM — it combines the current entity (existingProject)
+      // with the new data (updateProjectDto) to create a single updated object
       const projectToUpdate = this.projectsRepo.merge(
         existingProject,
         updateProjectDto,
@@ -131,10 +133,9 @@ export class ProjectsService {
       }
 
       // Save updated project
-      const updatedProject = await this.projectsRepo.save(projectToUpdate);
+      await this.projectsRepo.save(projectToUpdate);
 
       return {
-        data: updatedProject, // Return updated project data
         success: true,
         message: 'Project updated successfully',
       };

@@ -59,6 +59,7 @@ export class ProjectsController {
   }
 
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('image', multerOptions))
   @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: string,
