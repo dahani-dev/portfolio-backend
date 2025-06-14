@@ -18,6 +18,7 @@ import { LoginModule } from './login/login.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       autoLoadEntities: true,
+      // make the synchronize true only on developement mode
       synchronize: true,
     }),
     LoginModule,
