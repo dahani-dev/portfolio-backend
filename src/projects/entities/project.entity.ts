@@ -42,13 +42,13 @@ export class Project {
   // type: 'timestamp' is mean:
   // The database column type will be 'timestamp' (date and time format).
 
-  // default: CURRENT_TIMESTAMP is mean:
+  // default: () => CURRENT_TIMESTAMP is mean:
   // When a new record is inserted, the default value for this column will be the current date and time.
 
   // CURRENT_TIMESTAMP is mean:
   // It's a SQL function that returns the current date and time from the database server.
 
-  @CreateDateColumn({ type: 'timestamp', default: CURRENT_TIMESTAMP })
+  @CreateDateColumn({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })
   createdAt: Date;
 
   // @UpdateDateColumn() is mean:
@@ -60,7 +60,7 @@ export class Project {
 
   @UpdateDateColumn({
     type: 'timestamp',
-    default: CURRENT_TIMESTAMP,
+    default: () => CURRENT_TIMESTAMP,
     onUpdate: CURRENT_TIMESTAMP,
   })
   updatedAt: Date;
