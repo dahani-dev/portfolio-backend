@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -39,6 +40,30 @@ export class LoginService {
         accessToken: token,
         success: true,
         message: 'login succesfully',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      console.error('Login failed:', error);
+      throw new InternalServerErrorException('Failed to login');
+    }
+  }
+
+  // Get admin user
+  async getAdminUser(id: number) {
+    if (id <= 0) {
+      throw new BadRequestException('Invalid User ID');
+    }
+    try {
+      const user = await this.loginRepo.findOneBy({ id: id });
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+      return {
+        data: user,
+        success: true,
+        message: 'User fetched successfully',
       };
     } catch (error) {
       if (error instanceof NotFoundException) {

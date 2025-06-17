@@ -19,6 +19,9 @@ export class AdminUser {
   @Column()
   password: string;
 
+  @Column()
+  userType: string;
+
   @CreateDateColumn({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })
   createdAt: Date;
 

@@ -5,8 +5,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { JwtPayload } from '../utils/utils';
 import { JwtService } from '@nestjs/jwt';
+
+/**
+ * @Authentication Guard
+ */
 
 // auth guard is a class used to protect routes by verifying user authentication before granting access
 // CanActivate is an interface that forces the class to implement the canActivate() method used for authorization logic
@@ -22,16 +25,19 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
     if (request.headers.authorization) {
-      const headers: string[] = request.headers.authorization?.split(' ');
-      if (headers[0] === 'Bearer' && headers[1] !== undefined) {
+      const authorization: string = request.headers.authorization;
+      if (!authorization) {
+        throw new UnauthorizedException('Access denied, no token provided');
+      }
+      const splitedAuthorization: string[] = authorization.split(' ');
+      if (
+        splitedAuthorization[0] === 'Bearer' &&
+        splitedAuthorization[1] !== undefined
+      ) {
         try {
-          const payload: JwtPayload = await this.jwtService.verifyAsync(
-            headers[1],
-            {
-              secret: process.env.JWT_SECRET_KEY,
-            },
-          );
-          request['admin'] = payload;
+          await this.jwtService.verifyAsync(splitedAuthorization[1], {
+            secret: process.env.JWT_SECRET_KEY,
+          });
           return true;
         } catch (error) {
           console.error(error);

@@ -19,6 +19,7 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/config/multer.config';
 import { AuthGuard } from 'src/login/guards/auth.guard';
+import { AuthRolesGuard } from 'src/login/guards/auth-roles.guard';
 
 @Controller('projects')
 export class ProjectsController {
@@ -52,14 +53,12 @@ export class ProjectsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   findAll() {
     return this.projectsService.findAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   // ParseIntPipe is used to automatically convert the 'id' parameter from a string to a number.
   // If 'id' cannot be converted to a number, it will throw a BadRequestException.
   findOne(@Param('id', ParseIntPipe) id: string) {
@@ -80,7 +79,8 @@ export class ProjectsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
+  // AuthRolesGuard this guard will check the permissions of user
+  @UseGuards(AuthRolesGuard)
   remove(@Param('id', ParseIntPipe) id: string) {
     return this.projectsService.remove(+id);
   }

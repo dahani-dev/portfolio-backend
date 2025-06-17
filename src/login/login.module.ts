@@ -24,5 +24,7 @@ import { ConfigModule } from '@nestjs/config';
   ],
   controllers: [LoginController],
   providers: [LoginService],
+  // we export LoginService to use it in ProductController and exact in @UseGuards(AuthRolesGuard)
+  exports: [LoginService],
 })
 export class LoginModule {}
