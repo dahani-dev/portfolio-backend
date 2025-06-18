@@ -21,7 +21,13 @@ async function bootstrap() {
 
   // app.enableCors() is a method provided by NestJS to enable Cross-Origin Resource Sharing (CORS),
   // allowing the backend to accept requests from different origins (e.g., your frontend on another port or domain).
-  // By default, it allows all origins, but you can configure it to restrict access to specific domains. like:  app.enableCors('http://www.example.com');
+  // By default, it allows all origins, but you can configure it to restrict access to specific domains. like:
+  // app.enableCors({
+  //   origin: 'http://localhost:5000', // Only allows this origin
+  //   credentials: true, // If you use cookies or authentication tokens
+  //   methods: ['GET', 'POST'], // You can specify allowed HTTP methods
+  // });
+
   app.enableCors();
 
   await app.listen(process.env.PORT ?? 3000);
