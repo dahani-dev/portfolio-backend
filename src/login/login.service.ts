@@ -37,7 +37,6 @@ export class LoginService {
       const token = await this.jwtService.signAsync(payload);
 
       return {
-        username: admin.username,
         accessToken: token,
         success: true,
         message: 'login succesfully',
