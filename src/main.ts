@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import * as express from 'express';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,8 +29,27 @@ async function bootstrap() {
   //   credentials: true, // If you use cookies or authentication tokens
   //   methods: ['GET', 'POST'], // You can specify allowed HTTP methods
   // });
-
   app.enableCors();
+
+  // app.use is a method in Express.js to register middleware functions that handle requests.
+  // Here, it mounts the middleware to handle requests starting with '/uploads' URL path.
+  // prototype: app.use(path, middleware)
+
+  // express.static is a built-in middleware function in Express.js
+  // that serves static files (like images, CSS, JS) from a specified directory on the server.
+
+  // __dirname is a Node.js global variable representing
+  // the absolute path of the directory containing the currently executing file.
+
+  // '..' in join(__dirname, '..', 'uploads') means "go up one directory level"
+  // from the current directory (__dirname) to reach the parent directory.
+
+  // 'uploads' is the folder name inside the parent directory
+  // where uploaded files (e.g., images) are stored and served statically.
+
+  // The combined join(...) resolves to the full path of the 'uploads' folder on the server filesystem,
+  // allowing express.static to serve files from there when requested via '/uploads' route.
+  app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
   await app.listen(process.env.PORT ?? 3000);
 }
