@@ -51,6 +51,6 @@ async function bootstrap() {
   // allowing express.static to serve files from there when requested via '/uploads' route.
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(parseInt(process.env.PORT || '3000'));
 }
 bootstrap();
