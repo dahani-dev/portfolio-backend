@@ -136,6 +136,7 @@ export class ProjectsService {
       await this.projectsRepo.save(projectToUpdate);
 
       return {
+        updatedProject: projectToUpdate,
         success: true,
         message: 'Project updated successfully',
       };
